@@ -6,7 +6,6 @@ QBWebSQL (Query Builder for WebSQL) is a tool to make simple web sql query likes
 <h3>How to use</h3>:
 
 ```javascript
-<pre>
 WebSQL.db.open();
 WebSQL.db.queryBuilder.selects(['ID', 'name'], function() {
     WebSQL.db.queryBuilder.from('test', function() {
@@ -23,14 +22,11 @@ WebSQL.db.queryBuilder.selects(['ID', 'name'], function() {
         });
     });
 });
-</pre>
 ```
 
 <h3>Avialable functions</h3>:
 ```javascript
-<pre>
 WebSQL.insert(table, columns, values, callback);
 WebSQL.update(table, columns, values, where, callback);
 WebSQL.destroy(table, where, callback);
-</pre>
 ```
