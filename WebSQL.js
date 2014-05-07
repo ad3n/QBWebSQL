@@ -14,6 +14,7 @@
     WebSQL.db.version = "1.0";
     WebSQL.db.size = 5 * 1024 * 1024;//5 MB
     WebSQL.db.description = "WebSQL Database";
+    WebSQL.db.connection = null;
 
     //Open database
     /**
