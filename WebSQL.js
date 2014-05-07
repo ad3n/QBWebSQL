@@ -14,7 +14,6 @@
     WebSQL.db.version = "1.0";
     WebSQL.db.size = 5 * 1024 * 1024;//5 MB
     WebSQL.db.description = "WebSQL Database";
-    WebSQL.db.connection = null;
 
     //Open database
     /**
@@ -47,12 +46,10 @@
         try {
             WebSQL.db.connection = openDatabase(WebSQL.db.name, WebSQL.db.version, WebSQL.db.description, WebSQL.size);
 
-            return WebSQL.db.connection;
+            return WebSQL.db;
         } catch (e) {
             console.log(e.message);
         }
-
-        return WebSQL.db;
     }
 
     //Transaction handle
