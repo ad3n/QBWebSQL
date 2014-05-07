@@ -235,9 +235,15 @@
     WebSQL.db.queryBuilder.query = function(callback) {
         var parameters = [];
         //Compile Select
-        var query = "SELECT ";
-        for (var i = 0; i < WebSQL.db.queryBuilder.fields.length; i++) {
-            query += WebSQL.db.queryBuilder.fields[i] + ", ";
+        if (WebSQL.db.queryBuilder.fields.length > 0) {
+            query += "SELECT ";
+            for (var i = 0; i < WebSQL.db.queryBuilder.fields.length; i++) {
+                query += WebSQL.db.queryBuilder.fields[i] + ", ";
+            }
+            //trim space and comma from start and end of string
+            query = query.replace(/([\s,]+|[,\s])+$/,'');
+        } else {
+            query += "SELECT *";
         }
         //trim space and comma from start and end of string
         query = query.replace(/([\s,]+|[,\s])+$/,'');
