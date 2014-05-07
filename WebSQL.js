@@ -10,20 +10,20 @@
     WebSQL.db = {};
 
     //Define default properties
-    WebSQL.db.name = "sanisphere";
-    WebSQL.db.version = "1";
-    WebSQL.db.size = 50 * 1024 * 1024;//50 MB
-    WebSQL.db.description = "Sanisphere pharmacy";
+    WebSQL.db.name = "websql";
+    WebSQL.db.version = "1.0";
+    WebSQL.db.size = 5 * 1024 * 1024;//5 MB
+    WebSQL.db.description = "WebSQL Database";
     WebSQL.db.connection = null;
 
     //Open database
     /**
-     * @param string @default 'sanisphere'
-     * @param string @default '1'
-     * @param integer @default 50MB @example : 5 * 1024 * 1024 = 5MB
-     * @param string @default 'Sanisphere pharmacy'
+     * @param string @default 'websql'
+     * @param string @default '1.0'
+     * @param integer @default 5MB @example : 5 * 1024 * 1024 = 5MB
+     * @param string @default 'WebSQL Database'
      *
-     * @return WebSQL.db.connection object
+     * @return WebSQL.db object
      **/
     WebSQL.db.open = function (name, version, size, description) {
         //Override any values
