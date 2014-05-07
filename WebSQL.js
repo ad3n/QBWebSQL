@@ -51,6 +51,8 @@
         } catch (e) {
             console.log(e.message);
         }
+
+        return WebSQL.db;
     }
 
     //Transaction handle
@@ -76,6 +78,8 @@
         } catch (e) {
             console.log(e.message);
         }
+
+        return WebSQL.db;
     }
 
     //Insert utility
@@ -99,6 +103,8 @@
         } catch (e) {
             console.log(e.message);
         }
+
+        return WebSQL.db;
     }
 
     //Update utility
@@ -125,6 +131,8 @@
         } catch (e) {
             console.log(e.message);
         }
+
+        return WebSQL.db;
     }
 
     //Delete utility
@@ -142,6 +150,8 @@
         } catch (e) {
             console.log(e.message);
         }
+
+        return WebSQL.db;
     }
 
     //Select utilities
@@ -160,6 +170,8 @@
         if(callback && "function" === typeof(callback)){
             callback();
         }
+
+        return WebSQL.db.queryBuilder;
     }
     /**
      * @param array
@@ -170,6 +182,8 @@
         if(callback && "function" === typeof(callback)){
             callback();
         }
+
+        return WebSQL.db.queryBuilder;
      }
     //Add from
     /**
@@ -181,6 +195,8 @@
         if(callback && "function" === typeof(callback)){
             callback();
         }
+
+        return WebSQL.db.queryBuilder;
     }
     //Add join
     /**
@@ -192,6 +208,8 @@
         if(callback && "function" === typeof(callback)){
             callback();
         }
+
+        return WebSQL.db.queryBuilder;
     }
     //Add where
     /**
@@ -209,6 +227,8 @@
         if(callback && "function" === typeof(callback)){
             callback();
         }
+
+        return WebSQL.db.queryBuilder;
     }
     //Compile query
     /**
@@ -242,20 +262,22 @@
         //trim space from start and end of string
         query = query.trim();
         //Compile Where
-        query += " WHERE ";
-        var where = "";
-        for (var key in WebSQL.db.queryBuilder.wheres) {
-            if (WebSQL.db.queryBuilder.wheres.hasOwnProperty(key)) {
-                where += " " + WebSQL.db.queryBuilder.wheres[key][0] + " ";
-                where += key + " ";
-                where += WebSQL.db.queryBuilder.wheres[key][1] + "?";
-                parameters.push(WebSQL.db.queryBuilder.wheres[key][2]);
+        if (WebSQL.db.queryBuilder.wheres > 0) {
+            query += " WHERE ";
+            var where = "";
+            for (var key in WebSQL.db.queryBuilder.wheres) {
+                if (WebSQL.db.queryBuilder.wheres.hasOwnProperty(key)) {
+                    where += " " + WebSQL.db.queryBuilder.wheres[key][0] + " ";
+                    where += key + " ";
+                    where += WebSQL.db.queryBuilder.wheres[key][1] + "?";
+                    parameters.push(WebSQL.db.queryBuilder.wheres[key][2]);
+                }
             }
+            //trim space from start and end of string
+            where = where.trim();
+            //Now we have real sql statement
+            query += where;
         }
-        //trim space from start and end of string
-        where = where.trim();
-        //Now we have real sql statement
-        query += where;
         if(callback && "function" === typeof(callback)){
             callback(query, parameters);
         }
