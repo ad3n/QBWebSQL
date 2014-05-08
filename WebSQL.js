@@ -32,19 +32,19 @@
      **/
     WebSQL.db.open = function (name, version, size, description) {
         //Override any values
-        if (undefined !== name) {
+        if (name) {
             WebSQL.db.name = name;
         }
 
-        if (undefined !== version) {
+        if (version) {
             WebSQL.db.version = version;
         }
 
-        if (undefined !== size) {
+        if (size) {
             WebSQL.db.size = size;
         }
 
-        if (undefined !== description) {
+        if (description) {
             WebSQL.db.description = description;
         }
 
@@ -55,6 +55,14 @@
             return WebSQL.db;
         } catch (e) {
             console.log(e.message);
+        }
+    }
+
+    //Create bootstrap function
+    WebSQL.db.init = function(callback) {
+        WebSQL.db.open();
+        if(callback && "function" === typeof(callback)){
+            callback();
         }
     }
 
@@ -119,7 +127,6 @@
      * @param callable function
      **/
     WebSQL.db.update = function (table, columns, values, where, callback) {
-        //@todo improve where statement to support multiple clausal of where
         try {
             var parameters = "";
             for (var i = 0; i < columns.length; i++) {
@@ -145,7 +152,6 @@
      * @param callable function
      **/
     WebSQL.db.destroy = function(table, where, callback) {
-        //@todo improve where statement to support multiple clausal of where
         try {
             var sqlStatement = "DELETE FROM " + table + " WHERE " + where.id + " " + where.operator + " ?";
 
@@ -163,6 +169,11 @@
     WebSQL.db.queryBuilder.froms = [];
     WebSQL.db.queryBuilder.joins = [];
     WebSQL.db.queryBuilder.wheres = [];
+    WebSQL.db.queryBuilder.groups = [];
+    WebSQL.db.queryBuilder.havings = [];
+    WebSQL.db.queryBuilder.orders = [];
+    WebSQL.db.queryBuilder.limit = null;
+    WebSQL.db.queryBuilder.offset = null;
     //Add selection
     /**
      * @param string
@@ -236,6 +247,16 @@
     //Compile query
     /**
      * @return string
+     *
+     * SELECT
+     * FROM
+     * JOIN
+     * WHERE
+     * GROUP BY
+     * HAVING
+     * ORDER BY
+     * LIMIT
+     * OFFSET
      **/
     WebSQL.db.queryBuilder.query = function(callback) {
         var parameters = [];
