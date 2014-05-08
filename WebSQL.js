@@ -6,7 +6,6 @@
  * @author : Muhamad Surya Iksanudin
  *
  * @todos:
- * - add some of sql statements likes orderby, groupby, limit, having
  * - improve performance
  * - improve codes
  **/
@@ -172,8 +171,22 @@
     WebSQL.db.queryBuilder.groups = [];
     WebSQL.db.queryBuilder.havings = [];
     WebSQL.db.queryBuilder.orders = [];
-    WebSQL.db.queryBuilder.limit = null;
+    WebSQL.db.queryBuilder.per = null;
     WebSQL.db.queryBuilder.offset = null;
+
+    //Create hook
+    WebSQL.db.queryBuilder.add = function(clausal, params, callback) {
+        var method = "WebSQL.db.queryBuilder." + clausal + "(" + params + ");";
+        //call method
+        eval(method);
+
+        if(callback && "function" === typeof(callback)){
+            callback();
+        }
+
+        return WebSQL.db.queryBuilder;
+    }
+
     //Add selection
     /**
      * @param string
@@ -190,7 +203,7 @@
     /**
      * @param array
      **/
-     WebSQL.db.queryBuilder.selects = function (columns, callback) {
+    WebSQL.db.queryBuilder.selects = function (columns, callback) {
         WebSQL.db.queryBuilder.fields = WebSQL.db.queryBuilder.fields.concat(columns);
 
         if(callback && "function" === typeof(callback)){
@@ -198,7 +211,8 @@
         }
 
         return WebSQL.db.queryBuilder;
-     }
+    }
+
     //Add from
     /**
      * @param string
@@ -212,6 +226,7 @@
 
         return WebSQL.db.queryBuilder;
     }
+
     //Add join
     /**
      * @param string
@@ -225,6 +240,7 @@
 
         return WebSQL.db.queryBuilder;
     }
+
     //Add where
     /**
      * @param array
@@ -244,6 +260,51 @@
 
         return WebSQL.db.queryBuilder;
     }
+
+    //Add Group By
+    /**
+     * @param string
+     **/
+    WebSQL.db.queryBuilder.groupBy = function(column, callback) {
+        WebSQL.db.queryBuilder.groups.push(column);
+
+        if(callback && "function" === typeof(callback)){
+            callback();
+        }
+
+        return WebSQL.db.queryBuilder;
+    }
+
+    //Add Order By
+    /**
+     * @param string
+     **/
+    WebSQL.db.queryBuilder.orderBy = function(column, callback) {
+        WebSQL.db.queryBuilder.orders.push(column);
+
+        if(callback && "function" === typeof(callback)){
+            callback();
+        }
+
+        return WebSQL.db.queryBuilder;
+    }
+    //Add Limit
+    /**
+     * @param integer
+     * @param integer
+     **/
+    WebSQL.db.queryBuilder.limit = function(limit, offset, callback) {
+        WebSQL.db.queryBuilder.per = limit;
+        if (offset) {
+            WebSQL.db.queryBuilder.offset = offset;
+        }
+        if(callback && "function" === typeof(callback)){
+            callback();
+        }
+
+        return WebSQL.db.queryBuilder;
+    }
+
     //Compile query
     /**
      * @return string
@@ -308,11 +369,41 @@
             //Now we have real sql statement
             query += where;
         }
+        //Compile Group By
+        if (WebSQL.db.queryBuilder.groups > 0) {
+            query += " GROUP BY ";
+            for (var i = 0; i < WebSQL.db.queryBuilder.groups.length; i++) {
+                query += WebSQL.db.queryBuilder.groups[i] + ", ";
+            }
+            //trim space and comma from start and end of string
+            query = query.replace(/([\s,]+|[,\s])+$/,'');
+        }
+        //Compile Order By
+        if (WebSQL.db.queryBuilder.orders > 0) {
+            query += " ORDER BY ";
+            for (var i = 0; i < WebSQL.db.queryBuilder.orders.length; i++) {
+                query += WebSQL.db.queryBuilder.orders[i] + ", ";
+            }
+            //trim space and comma from start and end of string
+            query = query.replace(/([\s,]+|[,\s])+$/,'');
+        }
+        //Compile LIMIT
+        if (WebSQL.db.queryBuilder.per) {
+            query += " LIMIT " + WebSQL.db.queryBuilder.per + " ";
+            if (WebSQL.db.queryBuilder.offset) {
+                query += "OFFSET " + WebSQL.db.queryBuilder.offset;
+            }
+        }
         //make sure to remove all query builder value
         WebSQL.db.queryBuilder.fields = [];
         WebSQL.db.queryBuilder.froms = [];
         WebSQL.db.queryBuilder.joins = [];
         WebSQL.db.queryBuilder.wheres = [];
+        WebSQL.db.queryBuilder.groups = [];
+        WebSQL.db.queryBuilder.havings = [];
+        WebSQL.db.queryBuilder.orders = [];
+        WebSQL.db.queryBuilder.per = null;
+        WebSQL.db.queryBuilder.offset = null;
 
         if(callback && "function" === typeof(callback)){
             callback(query, parameters);
