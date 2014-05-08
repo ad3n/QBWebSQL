@@ -297,7 +297,6 @@
      * @param integer
      **/
     WebSQL.db.queryBuilder.limit = function(limit, offset, callback) {
-        console.log('a');
         WebSQL.db.queryBuilder.per = limit;
 
         if (offset) {
@@ -326,7 +325,6 @@
      * OFFSET
      **/
     WebSQL.db.queryBuilder.query = function(callback) {
-        console.log(WebSQL.db.queryBuilder.per);
         var query = "";
         var parameters = [];
         //Compile Select
