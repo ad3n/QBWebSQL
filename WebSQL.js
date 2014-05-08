@@ -4,6 +4,12 @@
  * (c) Muhamad Surya Iksanudin<surya.kejawen@gmail.com>
  *
  * @author : Muhamad Surya Iksanudin
+ *
+ * @todos:
+ *
+ * - add some of sql statements likes orderby, groupby, limit, having
+ * - improve performance
+ * - improve codes
  **/
 (function (WebSQL) {
     //Root class
@@ -282,9 +288,7 @@
             //Now we have real sql statement
             query += where;
         }
-        /**
-         * make sure to remove all query builder value
-         **/
+        //make sure to remove all query builder value
         WebSQL.db.queryBuilder.fields = [];
         WebSQL.db.queryBuilder.froms = [];
         WebSQL.db.queryBuilder.joins = [];
