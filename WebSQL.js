@@ -398,6 +398,8 @@
             query += " LIMIT " + WebSQL.db.queryBuilder.per + " ";
             if (WebSQL.db.queryBuilder.offset) {
                 query += "OFFSET " + WebSQL.db.queryBuilder.offset;
+            } else {
+                query += "OFFSET 0";
             }
         }
         //make sure to remove all query builder value
