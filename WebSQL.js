@@ -282,6 +282,14 @@
             //Now we have real sql statement
             query += where;
         }
+        /**
+         * make sure to remove all query builder value
+         **/
+        WebSQL.db.queryBuilder.fields = [];
+        WebSQL.db.queryBuilder.froms = [];
+        WebSQL.db.queryBuilder.joins = [];
+        WebSQL.db.queryBuilder.wheres = [];
+
         if(callback && "function" === typeof(callback)){
             callback(query, parameters);
         }
