@@ -37,12 +37,27 @@ WebSQL.db.queryBuilder
 
 <h3>Avialable functions</h3>
 ```javascript
-WebSQL.insert(table, columns, values, callback);
-WebSQL.update(table, columns, values, where, callback);
-WebSQL.destroy(table, where, callback);
+WebSQL.db.open(DBname, DBversion, DBsize, DBdescription);
+WebSQL.db.init(callback);
+WebSQL.db.execute(sqlStatement, parameters, callback);
+WebSQL.db.insert(table, columns, values, callback);
+WebSQL.db.update(table, columns, values, where, callback);
+WebSQL.db.destroy(table, where, callback);
+WebSQL.db.queryBuilder.add(clausal, params, callback);
+WebSQL.db.queryBuilder.select(column, callback);
+WebSQL.db.queryBuilder.selects(columns, callback);
+WebSQL.db.queryBuilder.from(table, callback);
+WebSQL.db.queryBuilder.join(table, joinStatement, type, callback);
+WebSQL.db.queryBuilder.where(where, callback);
+WebSQL.db.queryBuilder.groupBy(column, callback);
+WebSQL.db.queryBuilder.orderBy(column, callback);
+WebSQL.db.queryBuilder.limit(limit, offset, callback);
+WebSQL.db.queryBuilder.query(callback);
 ```
 
 <h3>Todo</h3>
-- add order by, group by, limit, and many sql statements
 - improve performance
 - improve some codes
+
+<h3>More</h3>
+See comments in source code
