@@ -6,7 +6,6 @@
  * @author : Muhamad Surya Iksanudin
  *
  * @todos:
- *
  * - add some of sql statements likes orderby, groupby, limit, having
  * - improve performance
  * - improve codes
