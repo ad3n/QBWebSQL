@@ -176,9 +176,12 @@
 
     //Create hook
     WebSQL.db.queryBuilder.add = function(clausal, params, callback) {
-        var method = "WebSQL.db.queryBuilder." + clausal + "(" + params + ");";
-        //call method
-        eval(method);
+        var method = "WebSQL.db.queryBuilder." + clausal;
+        method = window[method];
+
+        if ("function" === typeof method) {
+            method.apply(null, params);
+        }
 
         if(callback && "function" === typeof(callback)){
             callback();
@@ -322,6 +325,7 @@
      * OFFSET
      **/
     WebSQL.db.queryBuilder.query = function(callback) {
+        var query = "";
         var parameters = [];
         //Compile Select
         if (WebSQL.db.queryBuilder.fields.length > 0) {
