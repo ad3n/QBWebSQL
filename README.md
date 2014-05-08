@@ -41,3 +41,8 @@ WebSQL.insert(table, columns, values, callback);
 WebSQL.update(table, columns, values, where, callback);
 WebSQL.destroy(table, where, callback);
 ```
+
+<h3>Todo</h3>
+- add order by, group by, limit, and many sql statements
+- improve performance
+- improve some codes
