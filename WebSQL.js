@@ -295,9 +295,11 @@
      **/
     WebSQL.db.queryBuilder.limit = function(limit, offset, callback) {
         WebSQL.db.queryBuilder.per = limit;
+
         if (offset) {
             WebSQL.db.queryBuilder.offset = offset;
         }
+
         if(callback && "function" === typeof(callback)){
             callback();
         }
