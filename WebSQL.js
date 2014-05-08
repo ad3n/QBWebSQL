@@ -175,13 +175,13 @@
     WebSQL.db.queryBuilder.offset = null;
 
     //Create hook
-    WebSQL.db.queryBuilder.add = function(clausal, params, callback) {
-        var method = "WebSQL.db.queryBuilder." + clausal;
-        method = window[method];
-
-        if ("function" === typeof method) {
-            method.apply(null, params);
-        }
+    /**
+     * @param string sql clausal
+     * @param string parameter
+     **/
+    WebSQL.db.queryBuilder.add = function(method, params, callback) {
+        method = "WebSQL.db.queryBuilder." + method + "('" + params + "')";
+        eval(method);
 
         if(callback && "function" === typeof(callback)){
             callback();
@@ -297,6 +297,7 @@
      * @param integer
      **/
     WebSQL.db.queryBuilder.limit = function(limit, offset, callback) {
+        console.log('a');
         WebSQL.db.queryBuilder.per = limit;
 
         if (offset) {
@@ -325,6 +326,7 @@
      * OFFSET
      **/
     WebSQL.db.queryBuilder.query = function(callback) {
+        console.log(WebSQL.db.queryBuilder.per);
         var query = "";
         var parameters = [];
         //Compile Select
