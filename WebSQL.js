@@ -359,7 +359,7 @@
         //trim space from start and end of string
         query = query.trim();
         //Compile Where
-        if (WebSQL.db.queryBuilder.wheres > 0) {
+        if (Object.keys(WebSQL.db.queryBuilder.wheres).length > 0) {
             query += " WHERE ";
             var where = "";
             for (var key in WebSQL.db.queryBuilder.wheres) {
