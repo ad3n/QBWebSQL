@@ -73,10 +73,22 @@
      **/
     WebSQL.db.execute = function (sqlStatement, parameters, callback) {
         try {
+            WebSQL.db.transaction.executeSql(sqlStatement, parameters,
+                function (sqlTransaction, sqlResultSet) {
+                    if(callback && "function" === typeof callback){
+                        callback(sqlTransaction, sqlResultSet);
+                    }
+                },
+                function(sqlTransaction, sqlError) {
+                    console.log(sqlError.message);
+                }
+            );
+        } catch (e) {
             WebSQL.db.connection.transaction(function (trx) {
+                WebSQL.db.transaction = trx;
                 trx.executeSql(sqlStatement, parameters,
                     function (sqlTransaction, sqlResultSet) {
-                        if(callback && "function" === typeof(callback)){
+                        if(callback && "function" === typeof callback){
                             callback(sqlTransaction, sqlResultSet);
                         }
                     },
@@ -85,10 +97,8 @@
                     }
                 );
             });
-        } catch (e) {
-            console.log(e.message);
         }
-
+    
         return WebSQL.db;
     }
 
