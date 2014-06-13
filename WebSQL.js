@@ -143,14 +143,25 @@
             }
             //trim space and comma from start and end of string
             parameters = parameters.replace(/([\s,]+|[,\s])+$/,'');
-
-            var sqlStatement = "UPDATE " + table + " SET "+ parameters +" WHERE " + where.id + " " + where.operator + " " + where.value;
-
+    
+            var where = "";
+            for (var i = 0; i < wheres.length; i++) {
+                if (i !== 0) {
+                    where += " " + wheres[i].conjunction + " ";
+                }
+                where += wheres[i].id + " ";
+                where += wheres[i].operator + "?";
+                values.push(wheres[i].value);
+            }
+            //trim space from start and end of string
+            where = where.trim();
+            var sqlStatement = "UPDATE " + table + " SET " + parameters + " WHERE " + where;
+    
             WebSQL.db.execute(sqlStatement, values, callback);
         } catch (e) {
             console.log(e.message);
         }
-
+    
         return WebSQL.db;
     }
 
@@ -274,16 +285,16 @@
     WebSQL.db.queryBuilder.where = function (where, callback) {
         for (var i = 0; i < where.length; i++) {
             if (0 === i) {
-                WebSQL.db.queryBuilder.wheres[where[i].id] = ["", where[i].operator, where[i].value];
+                WebSQL.db.queryBuilder.wheres[i] = [where[i].id, "", where[i].operator, where[i].value];
             } else {
-                WebSQL.db.queryBuilder.wheres[where[i].id] = [where[i].conjunction, where[i].operator, where[i].value];
+                WebSQL.db.queryBuilder.wheres[i] = [where[i].id, where[i].conjunction, where[i].operator, where[i].value];
             }
         }
-
-        if(callback && "function" === typeof(callback)){
+    
+        if(callback && "function" === typeof callback){
             callback();
         }
-
+    
         return WebSQL.db.queryBuilder;
     }
 
@@ -387,13 +398,13 @@
             var where = "";
             for (var key in WebSQL.db.queryBuilder.wheres) {
                 if (WebSQL.db.queryBuilder.wheres.hasOwnProperty(key)) {
-                    where += " " + WebSQL.db.queryBuilder.wheres[key][0] + " ";
-                    where += key + " ";
-                    where += WebSQL.db.queryBuilder.wheres[key][1] + "?";
-                    parameters.push(WebSQL.db.queryBuilder.wheres[key][2]);
+                    where += " " + WebSQL.db.queryBuilder.wheres[key][1] + " ";
+                    where += WebSQL.db.queryBuilder.wheres[key][0] + " ";
+                    where += WebSQL.db.queryBuilder.wheres[key][2] + "?";
+                    parameters.push(WebSQL.db.queryBuilder.wheres[key][3]);
                 }
             }
-            //trim space from start and end of string
+                //trim space from start and end of string
             where = where.trim();
             //Now we have real sql statement
             query += where;
