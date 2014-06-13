@@ -162,13 +162,26 @@
      **/
     WebSQL.db.destroy = function(table, where, callback) {
         try {
-            var sqlStatement = "DELETE FROM " + table + " WHERE " + where.id + " " + where.operator + " ?";
-
-            WebSQL.db.execute(sqlStatement, [where.value], callback);
+            var values = [];
+            var where = "";
+            for (var i = 0; i < wheres.length; i++) {
+                if (i !== 0) {
+                    where += " " + wheres[i].conjunction + " ";
+                }
+                where += wheres[i].id + " ";
+                where += wheres[i].operator + "?";
+                values.push(wheres[i].value);
+            }
+            //trim space from start and end of string
+            where = where.trim();
+    
+            var sqlStatement = "DELETE FROM " + table + " WHERE " + where;
+    
+            WebSQL.db.execute(sqlStatement, values, callback);
         } catch (e) {
             console.log(e.message);
         }
-
+    
         return WebSQL.db;
     }
 
