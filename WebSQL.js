@@ -269,6 +269,9 @@
      * @param string
      */
     WebSQL.db.queryBuilder.join = function (table, joinStatement, type, callback) {
+        if ("undefined" === typeof type) {
+            type = "LEFT";
+        }
         WebSQL.db.queryBuilder.joins[table] = [type, joinStatement];
 
         if(callback && "function" === typeof(callback)){
