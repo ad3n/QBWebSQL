@@ -328,6 +328,27 @@
 
         return WebSQL.db.queryBuilder;
     }
+    
+    //Add Having
+    /**
+     * @param array
+     **/
+    WebSQL.db.queryBuilder.having = function (having, callback) {
+        for (var i = 0; i < having.length; i++) {
+            if (0 === i) {
+                WebSQL.db.queryBuilder.havings[i] = [having[i].id, "", having[i].operator, having[i].value];
+            } else {
+                WebSQL.db.queryBuilder.havings[i] = [having[i].id, having[i].conjunction, having[i].operator, having[i].value];
+            }
+        }
+    
+        if(callback && "function" === typeof callback){
+            callback();
+        }
+    
+        return WebSQL.db.queryBuilder;
+    }
+
     //Add Limit
     /**
      * @param integer
@@ -359,7 +380,6 @@
      * HAVING
      * ORDER BY
      * LIMIT
-     * OFFSET
      **/
     WebSQL.db.queryBuilder.query = function(callback) {
         var query = "";
@@ -420,6 +440,23 @@
             }
             //trim space and comma from start and end of string
             query = query.replace(/([\s,]+|[,\s])+$/,'');
+        }
+        //Compile Having
+        if (Object.keys(WebSQL.db.queryBuilder.havings).length > 0) {
+            query += " HAVING ";
+            var having = "";
+            for (var key in WebSQL.db.queryBuilder.havings) {
+                if (WebSQL.db.queryBuilder.havings.hasOwnProperty(key)) {
+                    having += " " + WebSQL.db.queryBuilder.havings[key][1] + " ";
+                    having += WebSQL.db.queryBuilder.havings[key][0] + " ";
+                    having += WebSQL.db.queryBuilder.havings[key][2] + "?";
+                    parameters.push(WebSQL.db.queryBuilder.havings[key][3]);
+                }
+            }
+            //trim space from start and end of string
+            having = having.trim();
+            //Now we have real sql statement
+            query += having;
         }
         //Compile Order By
         if (WebSQL.db.queryBuilder.orders > 0) {
